@@ -16,11 +16,11 @@ def makeFigure():
     # plot phase, green and red confl for three drug interactions
     ax, f = getSetup((10, 4), (2, 5))
 
-    A = simPlots_comb("081118_PC9_LCL_TXL", ax[0:4], "LCL161", "TXL")
-    B = simPlots_comb("090618_PC9_TXL_Erl", ax[5:9], "TXL", "Erlotinib")
+    A = simPlots_comb("081118_PC9_LCL_TXL", ax[0:4], "LCL161", "Paclitaxel")
+    B = simPlots_comb("090618_PC9_TXL_Erl", ax[5:9], "Paclitaxel", "Erl")
 
-    fittingPlots([ax[2], ax[4]], "081118_PC9_LCL_TXL", "LCL161", "TXL", A)
-    fittingPlots([ax[7], ax[9]], "090618_PC9_TXL_Erl", "TXL", "Erlotinib", B)
+    fittingPlots([ax[2], ax[4]], "081118_PC9_LCL_TXL", "LCL161", "Paclitaxel", A)
+    fittingPlots([ax[7], ax[9]], "090618_PC9_TXL_Erl", "Paclitaxel", "Erl", B)
 
     subplotLabel(ax)
 
@@ -32,8 +32,15 @@ def simPlots_comb(loadFile, axes, drug1, drug2):
     # Read model
     M = drugInteractionModel(loadFile, drug1=drug1, drug2=drug2, fit=False)
 
-    drug1 = drug1 + r" ($\mu$M)"
-    drug2 = drug2 + r" ($\mu$M)"
+    if drug1 == "LCL161":
+        drug1 = drug1 + r" ($\mu$M)"
+    else:
+        drug1 = drug1 + r" (nM)"
+
+    if drug2 == "LCL161":
+        drug2 = drug2 + r" ($\mu$M)"
+    else:
+        drug2 = drug2 + r" (nM)"
 
     dfplot = pd.DataFrame()
     dfplot["confl"] = M.phase.flatten()
@@ -56,11 +63,11 @@ def simPlots_comb(loadFile, axes, drug1, drug2):
     confl /= confl[0, 0]
     confl = 1.0 - confl
 
-    assert np.all(confl >= 0.0) and np.all(confl <= 1.0)
+    # assert np.all(confl >= 0.0) and np.all(confl <= 1.0)
 
     additive = (confl[:, 0][:, None] + confl[0, :][None, :]) - np.outer(confl[:, 0], confl[0, :])
 
-    assert np.all(additive >= 0.0) and np.all(additive <= 1.0)
+    # assert np.all(additive >= 0.0) and np.all(additive <= 1.0)
 
     confldf.iloc[:, :] = confl - additive
 
@@ -93,7 +100,7 @@ def fittingPlots(ax, loadFile, drug1, drug2, df):
     sns.violinplot(x="param", y="value", hue="drug", data=dfplot, ax=ax[1], linewidth=0.1)
     ax[1].set_xticklabels(ax[1].get_xticklabels(), rotation=25, horizontalalignment="right")
     ax[1].set_ylabel(r"Log$_{10}$[Value]")
-    ax[1].set_ylim(-2.0, -0.5)
+    ax[1].set_ylim(-4.0, 1.0)
     ax[1].set_xlabel("")
 
     # Remove legend title
