@@ -20,7 +20,7 @@ def makeFigure():
     B = simPlots_comb("090618_PC9_TXL_Erl", ax[5:9], "Paclitaxel", "Erl")
 
     fittingPlots([ax[2], ax[4]], "072718_PC9_BYL_PIM", "BYL719", "PIM447", A)
-    fittingPlots([ax[7], ax[9]], "090618_PC9_TXL_Erl", "Paclitaxel", "Erl", B)
+    # fittingPlots([ax[7], ax[9]], "090618_PC9_TXL_Erl", "Paclitaxel", "Erl", B)
 
     subplotLabel(ax)
 
