@@ -176,7 +176,7 @@ class GrowthModel:
             self.timeV = data.iloc[:, 1].values
 
             assert len(data.columns) >= firstCols + 2
-            for col in list(range(firstCols, len(data.columns))):
+            for col in range(firstCols, len(data.columns)):
                 # Set the name of the condition we're considering
                 condName = data.columns.values[col]
 
@@ -196,14 +196,12 @@ class GrowthModel:
                     # If contains drug besides the combination drug
                     elif "blank" not in condName.lower():
                         try:  # Both combination drug and another drug
-                            drug1str = condName.split(", ")[0]
+                            drug1str, combstr = condName.split(", ")
                             dose1 = float(drug1str.split(" ")[1])
-                            combstr = condName.split(", ")[1]
                             dose2 = float(combstr.split(" ")[1])
                             drug = drug1str.split(" ")[0] + "+" + combstr.split(" ")[0]
                         except IndexError:  # Only the other drug
-                            drug = condName.split(" ")[0]
-                            dose1 = condName.split(" ")[1]
+                            drug, dose1 = condName.split(" ")
                             dose2 = 0
                     dose = (dose1, dose2)
 
@@ -222,8 +220,7 @@ class GrowthModel:
                     if "blank" not in condName.lower():
                         # Add the name of the condition we're considering
                         try:
-                            drug = condName.split(" ")[0]
-                            dose = condName.split(" ")[1]
+                            drug, dose = condName.split(" ")
                         except IndexError:
                             drug = "Control"
                             dose = 0
