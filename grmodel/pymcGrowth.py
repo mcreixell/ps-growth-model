@@ -175,12 +175,8 @@ class GrowthModel:
             # Set the time vector
             self.timeV = data.iloc[:, 1].values
 
-            if not hasattr(self, "totalCols"):
-                self.totalCols = len(data.columns)
-            if self.totalCols < firstCols + 2:
-                raise ValueError("Didn't find many columns.")
-
-            for col in list(range(firstCols, self.totalCols)):
+            assert len(data.columns) >= firstCols + 2
+            for col in list(range(firstCols, len(data.columns))):
                 # Set the name of the condition we're considering
                 condName = data.columns.values[col]
 
