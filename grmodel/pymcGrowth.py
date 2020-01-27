@@ -200,7 +200,7 @@ class GrowthModel:
                             dose1 = float(drug1str.split(" ")[1])
                             dose2 = float(combstr.split(" ")[1])
                             drug = drug1str.split(" ")[0] + "+" + combstr.split(" ")[0]
-                        except IndexError:  # Only the other drug
+                        except ValueError:  # Only the other drug
                             drug, dose1 = condName.split(" ")
                             dose2 = 0
                     dose = (dose1, dose2)
@@ -221,7 +221,7 @@ class GrowthModel:
                         # Add the name of the condition we're considering
                         try:
                             drug, dose = condName.split(" ")
-                        except IndexError:
+                        except ValueError:
                             drug = "Control"
                             dose = 0
 
