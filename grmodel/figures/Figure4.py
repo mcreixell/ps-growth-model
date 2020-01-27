@@ -14,13 +14,15 @@ def makeFigure():
     not captured by the traditional cell number measurements. """
 
     # plot phase, green and red confl for three drug interactions
-    ax, f = getSetup((10, 4), (2, 5))
+    ax, f = getSetup((10, 4), (3, 5))
 
-    A = simPlots_comb("072718_PC9_BYL_PIM", ax[0:4], "BYL719", "PIM447")
-    B = simPlots_comb("090618_PC9_TXL_Erl", ax[5:9], "Paclitaxel", "Erl")
+    A = simPlots_comb("050719_PC9_LCL_OSI", ax[0:4], "LCL161", "OSI-906")
+    B = simPlots_comb("050719_PC9_PIM_OSI", ax[5:9], "PIM447", "OSI-906")
+    C = simPlots_comb("072718_PC9_BYL_PIM", ax[10:14], "BYL719", "PIM447")
 
-    fittingPlots([ax[2], ax[4]], "072718_PC9_BYL_PIM", "BYL719", "PIM447", A)
-    # fittingPlots([ax[7], ax[9]], "090618_PC9_TXL_Erl", "Paclitaxel", "Erl", B)
+    fittingPlots([ax[2], ax[4]], "050719_PC9_LCL_OSI", "LCL161", "OSI-906", A)
+    fittingPlots([ax[7], ax[9]], "050719_PC9_PIM_OSI", "PIM447", "OSI-906", B)
+    fittingPlots([ax[12], ax[14]], "072718_PC9_BYL_PIM", "BYL719", "PIM447", C)
 
     subplotLabel(ax)
 
