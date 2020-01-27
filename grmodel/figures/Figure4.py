@@ -16,10 +16,10 @@ def makeFigure():
     # plot phase, green and red confl for three drug interactions
     ax, f = getSetup((10, 4), (2, 5))
 
-    A = simPlots_comb("081118_PC9_LCL_TXL", ax[0:4], "LCL161", "Paclitaxel")
+    A = simPlots_comb("072718_PC9_BYL_PIM", ax[0:4], "BYL719", "PIM447")
     B = simPlots_comb("090618_PC9_TXL_Erl", ax[5:9], "Paclitaxel", "Erl")
 
-    fittingPlots([ax[2], ax[4]], "081118_PC9_LCL_TXL", "LCL161", "Paclitaxel", A)
+    fittingPlots([ax[2], ax[4]], "072718_PC9_BYL_PIM", "BYL719", "PIM447", A)
     fittingPlots([ax[7], ax[9]], "090618_PC9_TXL_Erl", "Paclitaxel", "Erl", B)
 
     subplotLabel(ax)
