@@ -14,7 +14,7 @@ def makeFigure():
     not captured by the traditional cell number measurements. """
 
     # plot phase, green and red confl for three drug interactions
-    ax, f = getSetup((10, 4), (3, 5))
+    ax, f = getSetup((10, 6), (3, 5))
 
     A = simPlots_comb("050719_PC9_LCL_OSI", ax[0:4], "LCL161", "OSI-906")
     B = simPlots_comb("050719_PC9_PIM_OSI", ax[5:9], "PIM447", "OSI-906")
