@@ -54,34 +54,25 @@ def filterDrugC(df, drugAname, drugBname):
 
 def dataSplit(df):
     """ This will pull out the data """
-    keepCols = ["drugA", "drugB", "Elapsed", "Measure"]
-    grpCols = ["Elapsed", "drugA", "drugB"]
+    keepCols = ["drugA", "drugB", "Elapsed", "Measure", "Type"]
+    grpCols = ["Elapsed", "drugA", "drugB", "Type"]
     df.dropna(inplace=True)
 
     timeV = np.sort(np.array(df.Elapsed.unique(), dtype=np.float64))
 
-    dfPhase = df.loc[df["Type"] == "phase", :]
-    dfRed = df.loc[df["Type"] == "red", :]
-    dfGreen = df.loc[df["Type"] == "green", :]
+    dfGrp = df[keepCols].groupby(grpCols).agg({"Measure": "mean"}).reset_index()
 
-    dfMAT = dfPhase[keepCols].groupby(grpCols).agg({"Measure": "mean"}).unstack(0)
-    phase = dfMAT.values
+    phase = dfGrp.loc[dfGrp["Type"] == "phase", "Measure"].values
+    dfRED = dfGrp.loc[dfGrp["Type"] == "red", "Measure"].values
+    dfGreen = dfGrp.loc[dfGrp["Type"] == "green", "Measure"].values
 
-    dfRED = dfRed[keepCols].groupby(grpCols).agg({"Measure": "mean"}).unstack(0)
+    dfRED = dfRED - dfRED[0]  # substract by control
+    dfGreen = dfGreen - dfGreen[0]  # substract by control
 
-    dfRED.Measure = dfRED.Measure - dfRED.Measure.iloc[0]  # substract by control
-    red = dfRED.values
+    X1 = dfGrp.loc[dfGrp["Type"] == "phase", "drugA"].values + 0.01
+    X2 = dfGrp.loc[dfGrp["Type"] == "phase", "drugB"].values + 0.01
 
-    dfGREEN = dfGreen[keepCols].groupby(grpCols).agg({"Measure": "mean"}).unstack(0)
-    dfGREEN.Measure = dfGREEN.Measure - dfGREEN.Measure.iloc[0]  # substract by control
-    green = dfGREEN.values
+    assert phase.shape == dfRED.shape
+    assert phase.shape == dfGreen.shape
 
-    dfMAT.reset_index(inplace=True)
-
-    X1 = dfMAT["drugA"].values + 0.01
-    X2 = dfMAT["drugB"].values + 0.01
-
-    assert phase.shape == red.shape
-    assert phase.shape == green.shape
-
-    return (X1, X2, timeV, phase, red, green)
+    return (X1, X2, timeV, phase, dfRED, dfGreen)
