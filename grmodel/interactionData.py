@@ -60,19 +60,18 @@ def dataSplit(df):
 
     timeV = np.sort(np.array(df.Elapsed.unique(), dtype=np.float64))
 
-    dfGrp = df[keepCols].groupby(grpCols).agg({"Measure": "mean"}).reset_index()
+    dfGrp = df[keepCols].groupby(grpCols).agg({"Measure": "mean"}).unstack(0)
 
-    phase = dfGrp.loc[dfGrp["Type"] == "phase", "Measure"].values
-    dfRED = dfGrp.loc[dfGrp["Type"] == "red", "Measure"].values
-    dfGreen = dfGrp.loc[dfGrp["Type"] == "green", "Measure"].values
+    phase = dfGrp.xs('phase', level='Type').values
+    dfRED = dfGrp.xs('red', level='Type').values
+    dfGreen = dfGrp.xs('green', level='Type').values
 
     dfRED = dfRED - dfRED[0]  # substract by control
     dfGreen = dfGreen - dfGreen[0]  # substract by control
 
-    X1 = dfGrp.loc[dfGrp["Type"] == "phase", "drugA"].values + 0.01
-    X2 = dfGrp.loc[dfGrp["Type"] == "phase", "drugB"].values + 0.01
+    X1 = dfGrp.index.get_level_values('drugA').values + 0.01
+    X2 = dfGrp.index.get_level_values('drugB').values + 0.01
 
-    assert phase.shape == dfRED.shape
-    assert phase.shape == dfGreen.shape
+    assert phase.shape == dfRED.shape == dfGreen.shape
 
     return (X1, X2, timeV, phase, dfRED, dfGreen)
